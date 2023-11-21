@@ -1,0 +1,36 @@
+name: Terraform Apply
+
+on:
+  push:
+    branches:
+      - main  # Modify as needed
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0  # Modify to your Terraform version
+
+      - name: Azure Login
+        run: az login --service-principal -u ${{ secrets.c1d00aec-4e92-4fae-88a7-1d68a129b074 }} -p ${{ secrets.o1b8Q~4b3Igq_EGwggO4SOjoOtv5u6jSEDrQWccn }} --tenant ${{ secrets.593fcce9-75cb-472c-9784-f4ae4637b2fb }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply tfplan
+        env:
+          ARM_SUBSCRIPTION_ID: ${{ secrets.729672c5-d8c3-49fd-be05-c404781c9394 }}
+          ARM_CLIENT_ID: ${{ secrets.c1d00aec-4e92-4fae-88a7-1d68a129b074 }}
+          ARM_CLIENT_SECRET: ${{ secrets.o1b8Q~4b3Igq_EGwggO4SOjoOtv5u6jSEDrQWccn }}
+          ARM_TENANT_ID: ${{ secrets.593fcce9-75cb-472c-9784-f4ae4637b2fb }}
